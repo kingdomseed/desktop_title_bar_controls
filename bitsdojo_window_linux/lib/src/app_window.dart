@@ -13,8 +13,13 @@ class BitsDojoNotInitializedException implements Exception {
 
 class GtkAppWindow extends GtkWindow {
   GtkAppWindow._() {
-    super.handle = native.getAppWindowHandle();
-    assert(handle != null, "Could not get Flutter window");
+    final h = native.getAppWindowHandle();
+    if (h != 0) {
+      super.handle = h;
+    } else {
+      // Defer initialization; handle will be set once ready.
+      super.handle = null;
+    }
   }
 
   static final GtkAppWindow _instance = GtkAppWindow._();

@@ -10,7 +10,7 @@ import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_inte
 var isInsideDoWhenWindowReady = false;
 
 bool isValidHandle(int? handle, String operation) {
-  if (handle == null) {
+  if (handle == null || handle == 0) {
     print("Could not $operation - handle is null");
     return false;
   }

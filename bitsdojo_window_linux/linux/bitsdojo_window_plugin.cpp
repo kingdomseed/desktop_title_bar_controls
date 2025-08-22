@@ -17,6 +17,7 @@
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
 #include <glib-object.h>
+#include <atomic>
 #include "./window_impl.h"
 
 const char kChannelName[] = "bitsdojo/window";
@@ -29,23 +30,43 @@ struct _FlBitsdojoWindowPlugin {
 
   // Connection to Flutter engine.
   FlMethodChannel* channel;
+  // Cached top-level window and realize handler for readiness.
+  GtkWindow* cached_window;
+  gulong realize_handler;
 };
 
 G_DEFINE_TYPE(FlBitsdojoWindowPlugin, bitsdojo_window_plugin, g_object_get_type())
 
-FlBitsdojoWindowPlugin *pluginInst = nullptr;
+// Global plugin pointer guarded atomically to avoid init reordering races.
+static std::atomic<FlBitsdojoWindowPlugin*> g_plugin{nullptr};
 
 // Gets the top level window being controlled.
 GtkWindow* get_window(FlBitsdojoWindowPlugin* self) {
+    if (self == nullptr || self->registrar == nullptr) return nullptr;
+    if (self->cached_window != nullptr) return self->cached_window;
+
     FlView* view = fl_plugin_registrar_get_view(self->registrar);
     if (view == nullptr) return nullptr;
-
-    GtkWindow* window = GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(view)));
-    return window;
+    GtkWidget* widget = GTK_WIDGET(view);
+    GtkWidget* toplevel = gtk_widget_get_toplevel(widget);
+    if (!GTK_IS_WINDOW(toplevel)) return nullptr;
+    self->cached_window = GTK_WINDOW(toplevel);
+    return self->cached_window;
 }
 
 GtkWindow* getAppWindowHandle(){
-	return get_window(pluginInst);
+    FlBitsdojoWindowPlugin* p = g_plugin.load(std::memory_order_acquire);
+    if (!p) {
+        static std::atomic_flag warned = ATOMIC_FLAG_INIT;
+        if (!warned.test_and_set()) g_warning("bitsdojo_window: plugin not initialized yet");
+        return nullptr;
+    }
+    auto* win = get_window(p);
+    if (!win) {
+        static std::atomic_flag warned2 = ATOMIC_FLAG_INIT;
+        if (!warned2.test_and_set()) g_warning("bitsdojo_window: GTK view not realized yet");
+    }
+    return win;
 }
 
 static FlMethodResponse* start_window_drag_at_position(FlBitsdojoWindowPlugin *self, FlValue *args) {
@@ -89,7 +110,9 @@ static void bitsdojo_window_plugin_class_init(FlBitsdojoWindowPluginClass* klass
 }
 
 static void bitsdojo_window_plugin_init(FlBitsdojoWindowPlugin* self) {
-	pluginInst = self;
+    self->cached_window = nullptr;
+    self->realize_handler = 0;
+    // publish plugin after constructed; registrar set in new()
 }
 
 FlBitsdojoWindowPlugin* bitsdojo_window_plugin_new(FlPluginRegistrar* registrar) {
@@ -98,6 +121,8 @@ FlBitsdojoWindowPlugin* bitsdojo_window_plugin_new(FlPluginRegistrar* registrar)
 
 
   self->registrar = FL_PLUGIN_REGISTRAR(g_object_ref(registrar));
+  // Mark plugin as ready for external loads.
+  g_plugin.store(self, std::memory_order_release);
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   self->channel =
@@ -112,7 +137,20 @@ FlBitsdojoWindowPlugin* bitsdojo_window_plugin_new(FlPluginRegistrar* registrar)
 void bitsdojo_window_plugin_register_with_registrar(FlPluginRegistrar* registrar) {
   FlBitsdojoWindowPlugin* plugin = bitsdojo_window_plugin_new(registrar);
   FlView* view = fl_plugin_registrar_get_view(plugin->registrar);
-  enhanceFlutterView(GTK_WIDGET(view));
+  if (view) {
+    GtkWidget* widget = GTK_WIDGET(view);
+    if (gtk_widget_get_realized(widget)) {
+      plugin->cached_window = GTK_WINDOW(gtk_widget_get_toplevel(widget));
+    } else {
+      plugin->realize_handler = g_signal_connect(
+          widget, "realize",
+          G_CALLBACK(+[](GtkWidget* w, gpointer user_data) {
+            auto* pl = static_cast<FlBitsdojoWindowPlugin*>(user_data);
+            pl->cached_window = GTK_WINDOW(gtk_widget_get_toplevel(w));
+          }),
+          plugin);
+    }
+    enhanceFlutterView(GTK_WIDGET(view));
+  }
   g_object_unref(plugin);
 }
-

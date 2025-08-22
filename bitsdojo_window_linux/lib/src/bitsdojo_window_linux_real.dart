@@ -15,6 +15,15 @@ class BitsdojoWindowLinux extends BitsdojoWindowPlatform {
     _ambiguate(WidgetsBinding.instance)!
         .waitUntilFirstFrameRasterized
         .then((value) {
+      // Attempt to ensure the native window handle is ready once the first
+      // frame is rasterized. If still not ready, caller ops will no-op safely.
+      final app = GtkAppWindow();
+      if (app.handle == null || app.handle == 0) {
+        final h = native.getAppWindowHandle();
+        if (h != 0) {
+          app.handle = h;
+        }
+      }
       isInsideDoWhenWindowReady = true;
       callback();
       isInsideDoWhenWindowReady = false;
