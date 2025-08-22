@@ -23,7 +23,7 @@ abstract class BitsdojoWindowPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static BitsdojoWindowPlatform _channelInstance =
+  static final BitsdojoWindowPlatform _channelInstance =
       MethodChannelBitsdojoWindow();
   static BitsdojoWindowPlatform _instance = _channelInstance;
 

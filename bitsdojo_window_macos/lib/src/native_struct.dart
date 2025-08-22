@@ -31,8 +31,8 @@ Pointer<BDWScreenInfo> newBDWScreenInfo() {
 
 extension FreeBDWScreenInfo on Pointer<BDWScreenInfo> {
   void free() {
-    calloc.free(this.ref.workingRect);
-    calloc.free(this.ref.fullRect);
+    calloc.free(ref.workingRect);
+    calloc.free(ref.fullRect);
     calloc.free(this);
   }
 }

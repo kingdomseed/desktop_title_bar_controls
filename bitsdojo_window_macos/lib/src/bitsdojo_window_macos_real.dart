@@ -24,7 +24,7 @@ class BitsdojoWindowMacOS extends BitsdojoWindowPlatform {
 
   @override
   void dragAppWindow() async {
-    print("We whould drag the window here");
+    debugPrint("We should drag the window here");
   }
 
   @override

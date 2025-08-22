@@ -9,8 +9,8 @@ class WindowBorder extends StatelessWidget {
   final Color color;
   final double? width;
 
-  WindowBorder({Key? key, required this.child, required this.color, this.width})
-      : super(key: key);
+  const WindowBorder(
+      {super.key, required this.child, required this.color, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +28,23 @@ class WindowBorder extends StatelessWidget {
     var topBorderWidth = width ?? 1;
 
     if (appWindow is WinDesktopWindow) {
-      appWindow as WinDesktopWindow..setWindowCutOnMaximize(borderWidth.ceil());
+      (appWindow as WinDesktopWindow)
+          .setWindowCutOnMaximize(borderWidth.ceil());
     }
 
     if (isWindowsApp) {
       topBorderWidth += 1 / appWindow.scaleFactor;
     }
-    final topBorderSide = BorderSide(color: this.color, width: topBorderWidth);
-    final borderSide = BorderSide(color: this.color, width: borderWidth);
+    final topBorderSide = BorderSide(color: color, width: topBorderWidth);
+    final borderSide = BorderSide(color: color, width: borderWidth);
 
     return Container(
-        child: child,
         decoration: BoxDecoration(
             border: Border(
                 top: topBorderSide,
                 left: borderSide,
                 right: borderSide,
-                bottom: borderSide)));
+                bottom: borderSide)),
+        child: child);
   }
 }

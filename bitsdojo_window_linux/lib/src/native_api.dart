@@ -6,90 +6,92 @@ import 'package:ffi/ffi.dart';
 final DynamicLibrary _appExecutable = DynamicLibrary.executable();
 
 // getAppWindowHandle
-typedef IntPtr TGetAppWindowHandle();
+typedef TGetAppWindowHandle = IntPtr Function();
 typedef DGetAppWindowHandle = int Function();
 final DGetAppWindowHandle getAppWindowHandle =
     _theAPI.ref.getAppWindowHandle.asFunction();
 
 // getScreenRect
-typedef Void TGetScreenRect(IntPtr window, Pointer<Int32> x, Pointer<Int32> y,
-    Pointer<Int32> width, Pointer<Int32> height);
+typedef TGetScreenRect = Void Function(IntPtr window, Pointer<Int32> x,
+    Pointer<Int32> y, Pointer<Int32> width, Pointer<Int32> height);
 typedef DGetScreenRect = void Function(int window, Pointer<Int32> x,
     Pointer<Int32> y, Pointer<Int32> width, Pointer<Int32> height);
 final DGetScreenRect getScreenRect = _theAPI.ref.getScreenRect.asFunction();
 
 // getScaleFactor
-typedef Void TGetScaleFactor(IntPtr window, Pointer<Int32> scaleFactor);
+typedef TGetScaleFactor = Void Function(
+    IntPtr window, Pointer<Int32> scaleFactor);
 typedef DGetScaleFactor = void Function(int window, Pointer<Int32> scaleFactor);
 final DGetScaleFactor getScaleFactor = _theAPI.ref.getScaleFactor.asFunction();
 
 // getPosition
-typedef Void TGetPosition(IntPtr window, Pointer<Int32> x, Pointer<Int32> y);
+typedef TGetPosition = Void Function(
+    IntPtr window, Pointer<Int32> x, Pointer<Int32> y);
 typedef DGetPosition = void Function(
     int window, Pointer<Int32> x, Pointer<Int32> y);
 final DGetPosition getPosition = _theAPI.ref.getPosition.asFunction();
 
 // setPosition
-typedef Void TSetPosition(IntPtr window, Int32 x, Int32 y);
+typedef TSetPosition = Void Function(IntPtr window, Int32 x, Int32 y);
 typedef DSetPosition = void Function(int window, int x, int y);
 final DSetPosition setPosition = _theAPI.ref.setPosition.asFunction();
 
 // getSize
-typedef Void TGetSize(
+typedef TGetSize = Void Function(
     IntPtr window, Pointer<Int32> width, Pointer<Int32> height);
 typedef DGetSize = void Function(
     int window, Pointer<Int32> width, Pointer<Int32> height);
 final DGetSize getSize = _theAPI.ref.getSize.asFunction();
 
 // setSize
-typedef Void TSetSize(IntPtr window, Int32 width, Int32 height);
+typedef TSetSize = Void Function(IntPtr window, Int32 width, Int32 height);
 typedef DSetSize = void Function(int window, int width, int height);
 final DSetSize setSize = _theAPI.ref.setSize.asFunction();
 // setRect
-typedef Void TSetRect(
+typedef TSetRect = Void Function(
     IntPtr window, Int32 x, Int32 y, Int32 width, Int32 height);
 typedef DSetRect = void Function(
     int window, int x, int y, int width, int height);
 final DSetRect setRect = _theAPI.ref.setRect.asFunction();
 
 // setMinSize
-typedef Void TSetMinSize(IntPtr window, Int32 width, Int32 height);
+typedef TSetMinSize = Void Function(IntPtr window, Int32 width, Int32 height);
 typedef DSetMinSize = void Function(int window, int width, int height);
 final DSetMinSize setMinSize = _theAPI.ref.setMinSize.asFunction();
 
 // setMaxSize
-typedef Void TSetMaxSize(IntPtr window, Int32 width, Int32 height);
+typedef TSetMaxSize = Void Function(IntPtr window, Int32 width, Int32 height);
 typedef DSetMaxSize = void Function(int window, int width, int height);
 final DSetMinSize setMaxSize = _theAPI.ref.setMaxSize.asFunction();
 
 // showWindow
-typedef Void TShowWindow(IntPtr window);
+typedef TShowWindow = Void Function(IntPtr window);
 typedef DShowWindow = void Function(int window);
 final DShowWindow showWindow = _theAPI.ref.showWindow.asFunction();
 
 // hideWindow
-typedef Void THideWindow(IntPtr window);
+typedef THideWindow = Void Function(IntPtr window);
 typedef DHideWindow = void Function(int window);
 final DHideWindow hideWindow = _theAPI.ref.hideWindow.asFunction();
 
 // maximizeWindow
-typedef Void TMinimizeWindow(IntPtr window);
+typedef TMinimizeWindow = Void Function(IntPtr window);
 typedef DMinimizeWindow = void Function(int window);
 final DMinimizeWindow minimizeWindow = _theAPI.ref.minimizeWindow.asFunction();
 
 // maximizeWindow
-typedef Void TMaximizeWindow(IntPtr window);
+typedef TMaximizeWindow = Void Function(IntPtr window);
 typedef DMaximizeWindow = void Function(int window);
 final DMaximizeWindow maximizeWindow = _theAPI.ref.maximizeWindow.asFunction();
 
 // unmaximizeWindow
-typedef Void TUnmaximizeWindow(IntPtr window);
+typedef TUnmaximizeWindow = Void Function(IntPtr window);
 typedef DUnmaximizeWindow = void Function(int window);
 final DMaximizeWindow unmaximizeWindow =
     _theAPI.ref.unmaximizeWindow.asFunction();
 
 // setWindowTitle
-typedef Void TSetWindowTitle(IntPtr window, Pointer<Utf8> title);
+typedef TSetWindowTitle = Void Function(IntPtr window, Pointer<Utf8> title);
 typedef DSetWindowTitle = void Function(int window, Pointer<Utf8> title);
 final DSetWindowTitle setWindowTitle = _theAPI.ref.setWindowTitle.asFunction();
 
@@ -119,7 +121,7 @@ class BDWAPI extends Struct {
   external Pointer<NativeFunction<TIsAppWindowReady>> isAppWindowReady;
 }
 
-typedef Pointer<BDWAPI> TBitsdojoWindowAPI();
+typedef TBitsdojoWindowAPI = Pointer<BDWAPI> Function();
 
 final TBitsdojoWindowAPI bitsdojoWindowAPI = _appExecutable
     .lookup<NativeFunction<TBitsdojoWindowAPI>>("bitsdojo_window_api")

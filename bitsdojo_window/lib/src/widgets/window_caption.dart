@@ -3,7 +3,7 @@ import '../app_window.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class _MoveWindow extends StatelessWidget {
-  _MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
+  const _MoveWindow({this.child, this.onDoubleTap});
   final Widget? child;
   final VoidCallback? onDoubleTap;
   @override
@@ -13,36 +13,36 @@ class _MoveWindow extends StatelessWidget {
         onPanStart: (details) {
           appWindow.startDragging();
         },
-        onDoubleTap: this.onDoubleTap ?? () => appWindow.maximizeOrRestore(),
-        child: this.child ?? Container());
+        onDoubleTap: onDoubleTap ?? () => appWindow.maximizeOrRestore(),
+        child: child ?? Container());
   }
 }
 
 class MoveWindow extends StatelessWidget {
   final Widget? child;
   final VoidCallback? onDoubleTap;
-  MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
+  const MoveWindow({super.key, this.child, this.onDoubleTap});
   @override
   Widget build(BuildContext context) {
-    if (child == null) return _MoveWindow(onDoubleTap: this.onDoubleTap);
+    if (child == null) return _MoveWindow(onDoubleTap: onDoubleTap);
     return _MoveWindow(
-      onDoubleTap: this.onDoubleTap,
+      onDoubleTap: onDoubleTap,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Expanded(child: this.child!)]),
+          children: [Expanded(child: child!)]),
     );
   }
 }
 
 class WindowTitleBarBox extends StatelessWidget {
   final Widget? child;
-  WindowTitleBarBox({Key? key, this.child}) : super(key: key);
+  const WindowTitleBarBox({super.key, this.child});
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return Container();
     }
     final titlebarHeight = appWindow.titleBarHeight;
-    return SizedBox(height: titlebarHeight, child: this.child ?? Container());
+    return SizedBox(height: titlebarHeight, child: child ?? Container());
   }
 }

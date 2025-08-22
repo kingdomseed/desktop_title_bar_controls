@@ -63,14 +63,13 @@ class WindowButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   WindowButton(
-      {Key? key,
+      {super.key,
       WindowButtonColors? colors,
       this.builder,
       @required this.iconBuilder,
       this.padding,
       this.onPressed,
-      this.animate = false})
-      : super(key: key) {
+      this.animate = false}) {
     this.colors = colors ?? _defaultButtonColors;
   }
 
@@ -105,9 +104,8 @@ class WindowButton extends StatelessWidget {
             backgroundColor: getBackgroundColor(mouseState),
             iconColor: getIconColor(mouseState));
 
-        var icon = (this.iconBuilder != null)
-            ? this.iconBuilder!(buttonContext)
-            : Container();
+        var icon =
+            (iconBuilder != null) ? iconBuilder!(buttonContext) : Container();
         double borderSize = appWindow.borderSize;
         double defaultPadding =
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
@@ -123,14 +121,13 @@ class WindowButton extends StatelessWidget {
             duration: Duration(milliseconds: animationMs),
             color: buttonContext.backgroundColor ?? fadeOutColor,
             child: iconWithPadding);
-        var button = (this.builder != null)
-            ? this.builder!(buttonContext, icon)
-            : iconWithPadding;
+        var button =
+            (builder != null) ? builder!(buttonContext, icon) : iconWithPadding;
         return SizedBox(
             width: buttonSize.width, height: buttonSize.height, child: button);
       },
       onPressed: () {
-        if (this.onPressed != null) this.onPressed!();
+        if (onPressed != null) onPressed!();
       },
     );
   }
@@ -138,13 +135,8 @@ class WindowButton extends StatelessWidget {
 
 class MinimizeWindowButton extends WindowButton {
   MinimizeWindowButton(
-      {Key? key,
-      WindowButtonColors? colors,
-      VoidCallback? onPressed,
-      bool? animate})
+      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
       : super(
-            key: key,
-            colors: colors,
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>
                 MinimizeIcon(color: buttonContext.iconColor),
@@ -153,13 +145,8 @@ class MinimizeWindowButton extends WindowButton {
 
 class MaximizeWindowButton extends WindowButton {
   MaximizeWindowButton(
-      {Key? key,
-      WindowButtonColors? colors,
-      VoidCallback? onPressed,
-      bool? animate})
+      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
       : super(
-            key: key,
-            colors: colors,
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>
                 MaximizeIcon(color: buttonContext.iconColor),
@@ -168,13 +155,8 @@ class MaximizeWindowButton extends WindowButton {
 
 class RestoreWindowButton extends WindowButton {
   RestoreWindowButton(
-      {Key? key,
-      WindowButtonColors? colors,
-      VoidCallback? onPressed,
-      bool? animate})
+      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
       : super(
-            key: key,
-            colors: colors,
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>
                 RestoreIcon(color: buttonContext.iconColor),
@@ -189,12 +171,11 @@ final _defaultCloseButtonColors = WindowButtonColors(
 
 class CloseWindowButton extends WindowButton {
   CloseWindowButton(
-      {Key? key,
+      {super.key,
       WindowButtonColors? colors,
       VoidCallback? onPressed,
       bool? animate})
       : super(
-            key: key,
             colors: colors ?? _defaultCloseButtonColors,
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>

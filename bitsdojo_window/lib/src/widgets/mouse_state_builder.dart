@@ -9,7 +9,7 @@ class MouseState {
   MouseState();
   @override
   String toString() {
-    return "isMouseDown: ${this.isMouseDown} - isMouseOver: ${this.isMouseOver}";
+    return "isMouseDown: $isMouseDown - isMouseOver: $isMouseOver";
   }
 }
 
@@ -18,15 +18,14 @@ T? _ambiguate<T>(T? value) => value;
 class MouseStateBuilder extends StatefulWidget {
   final MouseStateBuilderCB builder;
   final VoidCallback? onPressed;
-  MouseStateBuilder({Key? key, required this.builder, this.onPressed})
-      : super(key: key);
+  const MouseStateBuilder({super.key, required this.builder, this.onPressed});
   @override
-  _MouseStateBuilderState createState() => _MouseStateBuilderState();
+  MouseStateBuilderState createState() => MouseStateBuilderState();
 }
 
-class _MouseStateBuilderState extends State<MouseStateBuilder> {
+class MouseStateBuilderState extends State<MouseStateBuilder> {
   late MouseState _mouseState;
-  _MouseStateBuilderState() {
+  MouseStateBuilderState() {
     _mouseState = MouseState();
   }
 
