@@ -99,6 +99,11 @@ typedef DIsAppWindowReady = int Function();
 final DIsAppWindowReady isAppWindowReady =
     _theAPI.ref.isAppWindowReady.asFunction();
 
+// setTopmost
+typedef Void TSetTopmost(IntPtr window, Int32 topmost);
+typedef DSetTopmost = void Function(int window, int topmost);
+final DSetTopmost setTopmost = _theAPI.ref.setTopMost.asFunction();
+
 class BDWAPI extends Struct {
   external Pointer<NativeFunction<TGetAppWindowHandle>> getAppWindowHandle;
   external Pointer<NativeFunction<TGetScreenRect>> getScreenRect;
@@ -117,6 +122,7 @@ class BDWAPI extends Struct {
   external Pointer<NativeFunction<TUnmaximizeWindow>> unmaximizeWindow;
   external Pointer<NativeFunction<TSetWindowTitle>> setWindowTitle;
   external Pointer<NativeFunction<TIsAppWindowReady>> isAppWindowReady;
+  external Pointer<NativeFunction<TSetTopmost>> setTopMost;
 }
 
 typedef Pointer<BDWAPI> TBitsdojoWindowAPI();
