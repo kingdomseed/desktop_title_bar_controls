@@ -94,13 +94,13 @@ typedef DSetWindowTitle = void Function(int window, Pointer<Utf8> title);
 final DSetWindowTitle setWindowTitle = _theAPI.ref.setWindowTitle.asFunction();
 
 // isAppWindowReady
-typedef Int32 TIsAppWindowReady();
+typedef TIsAppWindowReady = Int32 Function();
 typedef DIsAppWindowReady = int Function();
 final DIsAppWindowReady isAppWindowReady =
     _theAPI.ref.isAppWindowReady.asFunction();
 
 // setTopmost
-typedef Void TSetTopmost(IntPtr window, Int32 topmost);
+typedef TSetTopmost = Void Function(IntPtr window, Int32 topmost);
 typedef DSetTopmost = void Function(int window, int topmost);
 final DSetTopmost setTopmost = _theAPI.ref.setTopMost.asFunction();
 

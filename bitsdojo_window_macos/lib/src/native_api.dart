@@ -166,7 +166,7 @@ final DGetTitleBarHeight getTitleBarHeight =
     _publicAPI.ref.getTitleBarHeight.asFunction();
 
 // setTopmost
-typedef Void TSetTopmost(IntPtr window, Int32 topmost);
+typedef TSetTopmost = Void Function(IntPtr window, Int32 topmost);
 typedef DSetTopmost = void Function(int window, int topmost);
 final DSetTopmost setTopmost = _publicAPI.ref.setTopmost.asFunction();
 
