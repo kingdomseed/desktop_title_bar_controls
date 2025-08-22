@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'bitsdojo_window_platform_interface.dart';
@@ -11,7 +12,7 @@ class MethodChannelBitsdojoWindow extends BitsdojoWindowPlatform {
     try {
       await _channel.invokeMethod('dragAppWindow');
     } catch (e) {
-      print("Could not start draggging -> $e");
+      debugPrint("Could not start draggging -> $e");
     }
   }
 }

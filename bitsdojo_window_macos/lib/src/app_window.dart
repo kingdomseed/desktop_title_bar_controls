@@ -2,12 +2,13 @@ library bitsdojo_window_macos;
 
 import './window.dart';
 import './native_api.dart';
+import 'package:flutter/foundation.dart';
 
 class MacAppWindow extends MacOSWindow {
   MacAppWindow._() {
     super.handle = getAppWindow();
     if (handle == null) {
-      print("Could not get Flutter window");
+      debugPrint("Could not get Flutter window");
     }
   }
 

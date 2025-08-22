@@ -1,5 +1,7 @@
 library bitsdojo_window_windows;
 
+import 'package:flutter/foundation.dart';
+
 import './native_api.dart';
 import './window.dart';
 
@@ -16,7 +18,7 @@ class WinAppWindow extends WinWindow {
     super.handle = getAppWindow();
     final isLoaded = isBitsdojoWindowLoaded();
     if (!isLoaded) {
-      print(notInitializedMessage);
+      debugPrint(notInitializedMessage);
       throw BitsDojoNotInitializedException;
     }
     assert(handle != null, "Could not get Flutter window");

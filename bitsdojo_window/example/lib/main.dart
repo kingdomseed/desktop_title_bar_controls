@@ -26,13 +26,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: WindowBorder(
           color: borderColor,
           width: 1,
-          child: const Row(
+          child: Row(
             children: [LeftSide(), RightSide()],
           ),
         ),
@@ -53,7 +53,7 @@ class LeftSide extends StatelessWidget {
             color: sidebarColor,
             child: Column(
               children: [
-                WindowTitleBarBox(child: MoveWindow()),
+                const WindowTitleBarBox(child: MoveWindow()),
                 Expanded(child: Container())
               ],
             )));
@@ -76,10 +76,10 @@ class RightSide extends StatelessWidget {
               colors: [backgroundStartColor, backgroundEndColor],
               stops: [0.0, 1.0]),
         ),
-        child: Column(children: [
+        child: const Column(children: [
           WindowTitleBarBox(
             child: Row(
-              children: [Expanded(child: MoveWindow()), const WindowButtons()],
+              children: [Expanded(child: MoveWindow()), WindowButtons()],
             ),
           )
         ]),
