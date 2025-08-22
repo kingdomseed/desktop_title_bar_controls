@@ -6,8 +6,11 @@
 [![Build Test](https://github.com/bitsdojo/bitsdojo_window/actions/workflows/build_test.yaml/badge.svg)](https://github.com/bitsdojo/bitsdojo_window/actions/workflows/build_test.yaml)
 [![GitHub License](https://img.shields.io/github/license/bitsdojo/bitsdojo_window)](https://github.com/bitsdojo/bitsdojo_window/blob/main/LICENSE)
 
-# bitsdojo_window
+# bitsdojo_window (desktop_title_bar_controls)
 
+**NOTE**: This package is a fork that includes some of the open PRs (such as [https://github.com/bitsdojo/bitsdojo_window/pull/264] and [https://github.com/bitsdojo/bitsdojo_window/pull/261]) on the branch and also tries to address some of the open Linux issues such as [https://github.com/bitsdojo/bitsdojo_window/issues/267] and [https://github.com/bitsdojo/bitsdojo_window/issues/230]. Other open issues and requests may be considered as I have time. I currently use this package in my main Flutter app and have to support Windows, macOS, and Linux. PRs are welcome. MOre updates to come. 
+
+# Original README, Unmodified
 A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window on **Windows**, **macOS** and **Linux**.
 
 Watch the tutorial to get started. Click the image below to watch the video:
