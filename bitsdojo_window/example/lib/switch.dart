@@ -174,7 +174,7 @@ class LeftSide extends StatelessWidget {
         width: 200,
         child: Container(
             color: colors.sidebar,
-            child: Column(
+            child: const Column(
               children: [WindowTitleBarBox(child: MoveWindow())],
             )));
   }
@@ -214,9 +214,9 @@ class RightSideTopArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WindowTitleBarBox(
+    return const WindowTitleBarBox(
         child: Row(
-            children: [Expanded(child: MoveWindow()), const WindowButtons()]));
+            children: [Expanded(child: MoveWindow()), WindowButtons()]));
   }
 }
 
@@ -269,7 +269,8 @@ class RoundedFlatButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
-              side: const BorderSide(color: Colors.white)), backgroundColor: color ?? Colors.grey[900],
+              side: const BorderSide(color: Colors.white)),
+          backgroundColor: color ?? Colors.grey[900],
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           textStyle: TextStyle(
               color: textColor ?? Colors.white,

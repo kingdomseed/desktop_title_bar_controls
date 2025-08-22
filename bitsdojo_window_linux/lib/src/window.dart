@@ -1,5 +1,6 @@
 import 'dart:ffi' hide Size;
 import 'package:flutter/painting.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:ffi/ffi.dart';
 
@@ -11,7 +12,7 @@ var isInsideDoWhenWindowReady = false;
 
 bool isValidHandle(int? handle, String operation) {
   if (handle == null || handle == 0) {
-    print("Could not $operation - handle is null");
+    debugPrint("Could not $operation - handle is null");
     return false;
   }
   return true;
@@ -23,8 +24,8 @@ class CachedWindowInfo {
 
 Rect getScreenRectForWindow(int handle) {
   Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
-  native.getScreenRect(handle, gtkRect.elementAt(0), gtkRect.elementAt(1),
-      gtkRect.elementAt(2), gtkRect.elementAt(3));
+  native.getScreenRect(
+      handle, gtkRect + 0, gtkRect + 1, gtkRect + 2, gtkRect + 3);
   Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
       gtkRect[2].toDouble(), gtkRect[3].toDouble());
   malloc.free(gtkRect);
@@ -33,6 +34,7 @@ Rect getScreenRectForWindow(int handle) {
 }
 
 class GtkWindow extends DesktopWindow {
+  @override
   int? handle;
   Size? _minSize;
   Size? _maxSize;
@@ -43,7 +45,7 @@ class GtkWindow extends DesktopWindow {
   // from native getSize/getPosition are not reliable
   // immediatly after the operation
 
-  CachedWindowInfo _cached = CachedWindowInfo();
+  final CachedWindowInfo _cached = CachedWindowInfo();
 
   GtkWindow() {
     //_alignment = Alignment.center;
@@ -70,8 +72,8 @@ class GtkWindow extends DesktopWindow {
     }
 
     Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
-    native.getPosition(handle!, gtkRect.elementAt(0), gtkRect.elementAt(1));
-    native.getSize(handle!, gtkRect.elementAt(2), gtkRect.elementAt(3));
+    native.getPosition(handle!, gtkRect + 0, gtkRect + 1);
+    native.getSize(handle!, gtkRect + 2, gtkRect + 3);
     Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
         gtkRect[2].toDouble(), gtkRect[3].toDouble());
 
@@ -96,8 +98,7 @@ class GtkWindow extends DesktopWindow {
     }
 
     Pointer<Int32> nativeResult = malloc.allocate(sizeOf<Int32>() * 2);
-    native.getSize(
-        handle!, nativeResult.elementAt(0), nativeResult.elementAt(1));
+    native.getSize(handle!, nativeResult + 0, nativeResult + 1);
     Size result = Size(nativeResult[0].toDouble(), nativeResult[1].toDouble());
     malloc.free(nativeResult);
     final gotSize = getLogicalSize(result);
@@ -109,7 +110,7 @@ class GtkWindow extends DesktopWindow {
       final sizeOnScreen = getSizeOnScreen(_cached.rect!.size);
       return sizeOnScreen;
     }
-    final winRect = this.rect;
+    final winRect = rect;
     return Size(winRect.width, winRect.height);
   }
 
@@ -119,14 +120,14 @@ class GtkWindow extends DesktopWindow {
   }
 
   int get dpi {
-    return (96.0 * this.scaleFactor).toInt();
+    return (96.0 * scaleFactor).toInt();
   }
 
   @override
   double get scaleFactor {
     if (!isValidHandle(handle, "get scaleFactor")) return 1;
     Pointer<Int32> scaleFactorPtr = malloc.allocate(sizeOf<Int32>());
-    native.getScaleFactor(handle!, scaleFactorPtr.elementAt(0));
+    native.getScaleFactor(handle!, scaleFactorPtr + 0);
     double result = scaleFactorPtr[0].toDouble();
     malloc.free(scaleFactorPtr);
     return result;
@@ -170,7 +171,7 @@ class GtkWindow extends DesktopWindow {
     if (_alignment != null) {
       if (!isValidHandle(handle, "set alignment")) return;
       final screenRect = getScreenRectForWindow(handle!);
-      this.rect = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
+      rect = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
     }
   }
 
@@ -244,7 +245,7 @@ class GtkWindow extends DesktopWindow {
     } else {
       final sizeOnScreen = getSizeOnScreen((sizeToSet));
       final screenRect = getScreenRectForWindow(handle!);
-      this.rect = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
+      rect = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
     }
   }
 
@@ -259,7 +260,7 @@ class GtkWindow extends DesktopWindow {
     if (isInsideDoWhenWindowReady == true && _cached.rect != null) {
       return _cached.rect!.topLeft;
     }
-    return this.rect.topLeft;
+    return rect.topLeft;
   }
 
   @override
@@ -275,9 +276,9 @@ class GtkWindow extends DesktopWindow {
   @override
   void show() {
     if (!isValidHandle(handle, "show")) return;
-    Offset currentPosition = this.position;
+    Offset currentPosition = position;
     native.showWindow(handle!);
-    this.position = currentPosition;
+    position = currentPosition;
   }
 
   @override
@@ -323,10 +324,10 @@ class GtkWindow extends DesktopWindow {
   @override
   void maximizeOrRestore() {
     if (!isValidHandle(handle, "maximizeOrRestore")) return;
-    if (this.isMaximized) {
-      this.restore();
+    if (isMaximized) {
+      restore();
     } else {
-      this.maximize();
+      maximize();
     }
   }
 

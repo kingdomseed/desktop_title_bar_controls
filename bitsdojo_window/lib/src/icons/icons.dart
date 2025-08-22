@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 /// Close
 class CloseIcon extends StatelessWidget {
   final Color color;
-  CloseIcon({Key? key, required this.color}) : super(key: key);
+  const CloseIcon({super.key, required this.color});
   @override
   Widget build(BuildContext context) => Align(
         alignment: Alignment.topLeft,
@@ -28,13 +28,13 @@ class CloseIcon extends StatelessWidget {
 /// Maximize
 class MaximizeIcon extends StatelessWidget {
   final Color color;
-  MaximizeIcon({Key? key, required this.color}) : super(key: key);
+  const MaximizeIcon({super.key, required this.color});
   @override
   Widget build(BuildContext context) => _AlignedPaint(_MaximizePainter(color));
 }
 
 class _MaximizePainter extends _IconPainter {
-  _MaximizePainter(Color color) : super(color);
+  _MaximizePainter(super.color);
   @override
   void paint(Canvas canvas, Size size) {
     Paint p = getPaint(color);
@@ -45,16 +45,16 @@ class _MaximizePainter extends _IconPainter {
 /// Restore
 class RestoreIcon extends StatelessWidget {
   final Color color;
-  RestoreIcon({
-    Key? key,
+  const RestoreIcon({
+    super.key,
     required this.color,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) => _AlignedPaint(_RestorePainter(color));
 }
 
 class _RestorePainter extends _IconPainter {
-  _RestorePainter(Color color) : super(color);
+  _RestorePainter(super.color);
   @override
   void paint(Canvas canvas, Size size) {
     Paint p = getPaint(color);
@@ -71,13 +71,13 @@ class _RestorePainter extends _IconPainter {
 /// Minimize
 class MinimizeIcon extends StatelessWidget {
   final Color color;
-  MinimizeIcon({Key? key, required this.color}) : super(key: key);
+  const MinimizeIcon({super.key, required this.color});
   @override
   Widget build(BuildContext context) => _AlignedPaint(_MinimizePainter(color));
 }
 
 class _MinimizePainter extends _IconPainter {
-  _MinimizePainter(Color color) : super(color);
+  _MinimizePainter(super.color);
   @override
   void paint(Canvas canvas, Size size) {
     Paint p = getPaint(color);
@@ -96,7 +96,7 @@ abstract class _IconPainter extends CustomPainter {
 }
 
 class _AlignedPaint extends StatelessWidget {
-  const _AlignedPaint(this.painter, {Key? key}) : super(key: key);
+  const _AlignedPaint(this.painter);
   final CustomPainter painter;
 
   @override
