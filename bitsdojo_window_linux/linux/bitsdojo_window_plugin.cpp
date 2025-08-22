@@ -33,6 +33,7 @@ struct _FlBitsdojoWindowPlugin {
   // Cached top-level window and realize handler for readiness.
   GtkWindow* cached_window;
   gulong realize_handler;
+  gulong destroy_handler;
 };
 
 G_DEFINE_TYPE(FlBitsdojoWindowPlugin, bitsdojo_window_plugin, g_object_get_type())
@@ -69,6 +70,12 @@ GtkWindow* getAppWindowHandle(){
     return win;
 }
 
+extern "C" int isAppWindowReady() {
+    FlBitsdojoWindowPlugin* p = g_plugin.load(std::memory_order_acquire);
+    if (!p) return 0;
+    return get_window(p) != nullptr ? 1 : 0;
+}
+
 static FlMethodResponse* start_window_drag_at_position(FlBitsdojoWindowPlugin *self, FlValue *args) {
 	auto window = get_window(self);
   startWindowDrag(window);
@@ -99,6 +106,28 @@ static void method_call_cb(FlMethodChannel* channel, FlMethodCall* method_call,
 static void bitsdojo_window_plugin_dispose(GObject* object) {
   FlBitsdojoWindowPlugin* self = FL_BITSDOJO_WINDOW_PLUGIN(object);
 
+  // Disconnect signal handlers if still connected
+  if (self->registrar) {
+    FlView* view = fl_plugin_registrar_get_view(self->registrar);
+    if (view && self->realize_handler) {
+      g_signal_handler_disconnect(GTK_WIDGET(view), self->realize_handler);
+      self->realize_handler = 0;
+    }
+  }
+  if (self->cached_window && self->destroy_handler) {
+    g_signal_handler_disconnect(GTK_WIDGET(self->cached_window), self->destroy_handler);
+    self->destroy_handler = 0;
+  }
+
+  // Clear cached window
+  self->cached_window = nullptr;
+
+  // If this instance is the globally published plugin, clear it.
+  FlBitsdojoWindowPlugin* p = g_plugin.load(std::memory_order_acquire);
+  if (p == self) {
+    g_plugin.store(nullptr, std::memory_order_release);
+  }
+
   g_clear_object(&self->registrar);
   g_clear_object(&self->channel);
 
@@ -112,6 +141,7 @@ static void bitsdojo_window_plugin_class_init(FlBitsdojoWindowPluginClass* klass
 static void bitsdojo_window_plugin_init(FlBitsdojoWindowPlugin* self) {
     self->cached_window = nullptr;
     self->realize_handler = 0;
+    self->destroy_handler = 0;
     // publish plugin after constructed; registrar set in new()
 }
 
@@ -141,12 +171,32 @@ void bitsdojo_window_plugin_register_with_registrar(FlPluginRegistrar* registrar
     GtkWidget* widget = GTK_WIDGET(view);
     if (gtk_widget_get_realized(widget)) {
       plugin->cached_window = GTK_WINDOW(gtk_widget_get_toplevel(widget));
+      if (plugin->cached_window) {
+        plugin->destroy_handler = g_signal_connect(
+            GTK_WIDGET(plugin->cached_window), "destroy",
+            G_CALLBACK(+[](GtkWidget* w, gpointer user_data) {
+              auto* pl = static_cast<FlBitsdojoWindowPlugin*>(user_data);
+              pl->cached_window = nullptr;
+              pl->destroy_handler = 0;
+            }),
+            plugin);
+      }
     } else {
       plugin->realize_handler = g_signal_connect(
           widget, "realize",
           G_CALLBACK(+[](GtkWidget* w, gpointer user_data) {
             auto* pl = static_cast<FlBitsdojoWindowPlugin*>(user_data);
             pl->cached_window = GTK_WINDOW(gtk_widget_get_toplevel(w));
+            if (pl->cached_window) {
+              pl->destroy_handler = g_signal_connect(
+                  GTK_WIDGET(pl->cached_window), "destroy",
+                  G_CALLBACK(+[](GtkWidget* w2, gpointer user_data2) {
+                    auto* pl2 = static_cast<FlBitsdojoWindowPlugin*>(user_data2);
+                    pl2->cached_window = nullptr;
+                    pl2->destroy_handler = 0;
+                  }),
+                  pl);
+            }
           }),
           plugin);
     }

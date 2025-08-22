@@ -1,5 +1,6 @@
 library bitsdojo_window_linux;
 
+import 'package:bitsdojo_window_linux/src/native_api.dart' as native;
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import './window.dart';
 import './app_window.dart';
@@ -19,9 +20,12 @@ class BitsdojoWindowLinux extends BitsdojoWindowPlatform {
       // frame is rasterized. If still not ready, caller ops will no-op safely.
       final app = GtkAppWindow();
       if (app.handle == null || app.handle == 0) {
-        final h = native.getAppWindowHandle();
-        if (h != 0) {
-          app.handle = h;
+        // Prefer readiness probe to avoid spurious early calls.
+        if (native.isAppWindowReady() != 0) {
+          final h = native.getAppWindowHandle();
+          if (h != 0) {
+            app.handle = h;
+          }
         }
       }
       isInsideDoWhenWindowReady = true;

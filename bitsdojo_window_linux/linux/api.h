@@ -7,6 +7,9 @@
 typedef GtkWindow* (*TGetAppWindowHandle)();
 GtkWindow* getAppWindowHandle();
 
+typedef int (*TIsAppWindowReady)();
+int isAppWindowReady();
+
 namespace bitsdojo_window {
 
 typedef struct _BDWAPI {
@@ -26,6 +29,7 @@ typedef struct _BDWAPI {
     TMaximizeWindow maximizeWindow;
     TUnmaximizeWindow unmaximizeWindow;
     TSetWindowTitle setWindowTitle;
+    TIsAppWindowReady isAppWindowReady;
 } BDWAPI;
 
 }  // namespace bitsdojo_window
