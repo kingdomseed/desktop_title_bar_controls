@@ -28,7 +28,8 @@ BDWPublicAPI publicAPI = {
     minimizeWindow,
     closeWindow,
     setWindowTitle,
-    getTitleBarHeight
+    getTitleBarHeight,
+    setTopmost
 };
 
 BDWAPI bdwAPI = {

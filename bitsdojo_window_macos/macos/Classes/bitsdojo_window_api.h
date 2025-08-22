@@ -27,6 +27,7 @@ typedef struct _BDWPublicAPI
     TCloseWindow closeWindow;
     TSetWindowTitle setWindowTitle;
     TGetTitleBarHeight getTitleBarHeight;
+    TSetTopmost setTopmost;
 } BDWPublicAPI;
 
 typedef struct _BDWPrivateAPI{

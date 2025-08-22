@@ -19,7 +19,8 @@ BDWAPI _theAPI = {
     maximizeWindow,
     unmaximizeWindow,
     setWindowTitle,
-    isAppWindowReady
+    isAppWindowReady,
+    setTopmost
 };
 
 } // namespace bitsdojo_window

@@ -48,6 +48,11 @@ class NotImplementedWindow extends DesktopWindow {
   }
 
   @override
+  set topmost(bool topmost) {
+    throw UnimplementedError('topmost setter has not been implemented.');
+  }
+
+  @override
   Alignment get alignment {
     throw UnimplementedError('alignment getter has not been implemented.');
   }

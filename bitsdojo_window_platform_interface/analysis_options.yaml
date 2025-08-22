@@ -1,0 +1,15 @@
+# Apply Flutter's recommended lints
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # You can customize rules here. Keeping defaults for now.
+    # Example:
+    # - avoid_print
+    # - prefer_final_locals
+
+analyzer:
+  exclude:
+    # Exclude generated files if any
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"

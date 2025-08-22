@@ -328,6 +328,8 @@ class WinWindow extends WinDesktopWindow {
 
   @override
   set topmost(bool topmost) {
-    // TODO: implement topmost
+    if (!isValidHandle(handle, "topmost")) return;
+
+    PostMessage(handle!, WM_USER + 1, topmost ? 1 : 0, 0);
   }
 }
