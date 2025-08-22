@@ -20,8 +20,8 @@ class BitsdojoWindowLinux extends BitsdojoWindowPlatform {
       // frame is rasterized. If still not ready, caller ops will no-op safely.
       // Prefer readiness probe to avoid touching the singleton early.
       if (native.isAppWindowReady() != 0) {
-        final app = GtkAppWindow();
-        if (app.handle == null || app.handle == 0) {
+        final app = GtkAppWindow.instance;
+        if (!isValidHandle(app.handle, "initialize handle")) {
           final h = native.getAppWindowHandle();
           if (h != 0) {
             app.handle = h;

@@ -11,8 +11,8 @@ import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_inte
 var isInsideDoWhenWindowReady = false;
 
 bool isValidHandle(int? handle, String operation) {
-  if (handle == null) {
-    debugPrint("Could not $operation - handle is null");
+  if (handle == null || handle == 0) {
+    debugPrint("Could not $operation - handle is ${handle == null ? 'null' : '0'}");
     return false;
   }
   return true;

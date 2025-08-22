@@ -23,6 +23,7 @@ class GtkAppWindow extends GtkWindow {
   }
 
   static final GtkAppWindow _instance = GtkAppWindow._();
+  static GtkAppWindow get instance => _instance;
 
   factory GtkAppWindow() {
     return _instance;
