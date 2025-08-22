@@ -96,9 +96,13 @@ bool getWindowEdge(int width, int height, gdouble x, double y,
 
 void getMousePositionOnScreen(GtkWindow *window, gint *x, gint *y) {
     auto screen = gtk_window_get_screen(window);
+    if (!screen) { *x = 0; *y = 0; return; }
     auto display = gdk_screen_get_display(screen);
+    if (!display) { *x = 0; *y = 0; return; }
     auto seat = gdk_display_get_default_seat(display);
+    if (!seat) { *x = 0; *y = 0; return; }
     auto device = gdk_seat_get_pointer(seat);
+    if (!device) { *x = 0; *y = 0; return; }
     gdk_device_get_position(device, nullptr, x, y);
 }
 
@@ -119,14 +123,54 @@ void getScaleFactorForWindow(GtkWindow *window, gint *scaleFactor) {
 }
 
     void emitMouseMoveEvent(GtkWidget* widget, int x, int y) {
-        auto event = (GdkEventButton *)gdk_event_new(GDK_MOTION_NOTIFY);
+        // Create a proper motion event. Using GdkEventButton here corrupts fields
+        // like `device` and triggers Gdk-CRITICAL warnings.
+        GdkEventMotion* event = (GdkEventMotion*)gdk_event_new(GDK_MOTION_NOTIFY);
         event->type = GDK_MOTION_NOTIFY;
+        event->time = (guint32)g_get_monotonic_time();
+
+        // Attach the target window and populate device/state fields.
+        event->window = gtk_widget_get_window(widget);
+        if (event->window) {
+            g_object_ref(event->window);
+        }
+
         event->x = x;
         event->y = y;
-        event->time = g_get_monotonic_time();
-        gboolean result;
+        event->state = (GdkModifierType)0;
+        event->is_hint = FALSE;
+
+        // Compute root coordinates if possible.
+        if (event->window) {
+            gint wx = 0, wy = 0;
+            gdk_window_get_origin(event->window, &wx, &wy);
+            event->x_root = wx + x;
+            event->y_root = wy + y;
+        } else {
+            event->x_root = x;
+            event->y_root = y;
+        }
+
+        // Populate device if available (may be NULL on some setups).
+        event->device = NULL;
+        if (event->window) {
+            GdkDisplay* display = gdk_window_get_display(event->window);
+            if (display) {
+                GdkSeat* seat = gdk_display_get_default_seat(display);
+                if (seat) {
+                    event->device = gdk_seat_get_pointer(seat);
+                }
+            }
+        }
+
+        gboolean result = FALSE;
         g_signal_emit_by_name(widget, "motion-notify-event", event, &result);
-        gdk_event_free((GdkEvent *)event);
+
+        if (event->window) {
+            g_object_unref(event->window);
+            event->window = NULL;
+        }
+        gdk_event_free((GdkEvent*)event);
     }
 
 }  // namespace bitsdojo_window
