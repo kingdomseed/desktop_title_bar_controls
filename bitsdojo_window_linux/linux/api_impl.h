@@ -51,7 +51,7 @@ namespace bitsdojo_window {
     void setWindowTitle(GtkWindow* window, const gchar *title);
 
     typedef void (*TSetTopmost)(GtkWindow*, int);
-    void setTopmost(GtkWindow* window,int topmost);
+    void setTopmost(GtkWindow* window, int topmost);
 }
 
 #endif // _BDW_API_IMPL_
