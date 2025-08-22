@@ -78,4 +78,8 @@ void setWindowTitle(NSWindow* window, const char* title);
 
 typedef double (*TGetTitleBarHeight)(NSWindow*);
 double getTitleBarHeight(NSWindow* window);
+
+// Topmost (always-on-top)
+typedef void (*TSetTopmost)(NSWindow*, int);
+void setTopmost(NSWindow* window, int topmost);
 #endif /* bitsdojo_window_h */

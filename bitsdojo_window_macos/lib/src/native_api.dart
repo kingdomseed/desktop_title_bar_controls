@@ -163,6 +163,11 @@ typedef DGetTitleBarHeight = double Function(int window);
 final DGetTitleBarHeight getTitleBarHeight =
     _publicAPI.ref.getTitleBarHeight.asFunction();
 
+// setTopmost
+typedef Void TSetTopmost(IntPtr window, Int32 topmost);
+typedef DSetTopmost = void Function(int window, int topmost);
+final DSetTopmost setTopmost = _publicAPI.ref.setTopmost.asFunction();
+
 class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TGetAppWindow>> getAppWindow;
   external Pointer<NativeFunction<TSetWindowCanBeShown>> setWindowCanBeShown;
@@ -187,6 +192,7 @@ class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TCloseWindow>> closeWindow;
   external Pointer<NativeFunction<TSetWindowTitle>> setWindowTitle;
   external Pointer<NativeFunction<TGetTitleBarHeight>> getTitleBarHeight;
+  external Pointer<NativeFunction<TSetTopmost>> setTopmost;
 }
 
 class BDWAPI extends Struct {
