@@ -336,4 +336,9 @@ class GtkWindow extends DesktopWindow {
   void startDragging() {
     BitsdojoWindowPlatform.instance.dragAppWindow();
   }
+  
+  @override
+  set topmost(bool topmost) {
+    // TODO: implement topmost
+  }
 }
