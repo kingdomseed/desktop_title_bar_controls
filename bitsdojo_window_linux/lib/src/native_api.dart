@@ -12,19 +12,21 @@ final DGetAppWindowHandle getAppWindowHandle =
     _theAPI.ref.getAppWindowHandle.asFunction();
 
 // getScreenRect
-typedef TGetScreenRect = Void Function(IntPtr window, Pointer<Int32> x, Pointer<Int32> y,
-    Pointer<Int32> width, Pointer<Int32> height);
+typedef TGetScreenRect = Void Function(IntPtr window, Pointer<Int32> x,
+    Pointer<Int32> y, Pointer<Int32> width, Pointer<Int32> height);
 typedef DGetScreenRect = void Function(int window, Pointer<Int32> x,
     Pointer<Int32> y, Pointer<Int32> width, Pointer<Int32> height);
 final DGetScreenRect getScreenRect = _theAPI.ref.getScreenRect.asFunction();
 
 // getScaleFactor
-typedef TGetScaleFactor = Void Function(IntPtr window, Pointer<Int32> scaleFactor);
+typedef TGetScaleFactor = Void Function(
+    IntPtr window, Pointer<Int32> scaleFactor);
 typedef DGetScaleFactor = void Function(int window, Pointer<Int32> scaleFactor);
 final DGetScaleFactor getScaleFactor = _theAPI.ref.getScaleFactor.asFunction();
 
 // getPosition
-typedef TGetPosition = Void Function(IntPtr window, Pointer<Int32> x, Pointer<Int32> y);
+typedef TGetPosition = Void Function(
+    IntPtr window, Pointer<Int32> x, Pointer<Int32> y);
 typedef DGetPosition = void Function(
     int window, Pointer<Int32> x, Pointer<Int32> y);
 final DGetPosition getPosition = _theAPI.ref.getPosition.asFunction();

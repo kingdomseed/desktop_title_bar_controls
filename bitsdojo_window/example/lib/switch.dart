@@ -215,8 +215,7 @@ class RightSideTopArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const WindowTitleBarBox(
-        child: Row(
-            children: [Expanded(child: MoveWindow()), WindowButtons()]));
+        child: Row(children: [Expanded(child: MoveWindow()), WindowButtons()]));
   }
 }
 

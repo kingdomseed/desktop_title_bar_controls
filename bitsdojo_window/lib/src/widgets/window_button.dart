@@ -104,9 +104,8 @@ class WindowButton extends StatelessWidget {
             backgroundColor: getBackgroundColor(mouseState),
             iconColor: getIconColor(mouseState));
 
-        var icon = (iconBuilder != null)
-            ? iconBuilder!(buttonContext)
-            : Container();
+        var icon =
+            (iconBuilder != null) ? iconBuilder!(buttonContext) : Container();
         double borderSize = appWindow.borderSize;
         double defaultPadding =
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
@@ -122,9 +121,8 @@ class WindowButton extends StatelessWidget {
             duration: Duration(milliseconds: animationMs),
             color: buttonContext.backgroundColor ?? fadeOutColor,
             child: iconWithPadding);
-        var button = (builder != null)
-            ? builder!(buttonContext, icon)
-            : iconWithPadding;
+        var button =
+            (builder != null) ? builder!(buttonContext, icon) : iconWithPadding;
         return SizedBox(
             width: buttonSize.width, height: buttonSize.height, child: button);
       },
@@ -137,10 +135,7 @@ class WindowButton extends StatelessWidget {
 
 class MinimizeWindowButton extends WindowButton {
   MinimizeWindowButton(
-      {super.key,
-      super.colors,
-      VoidCallback? onPressed,
-      bool? animate})
+      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
       : super(
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>
@@ -150,10 +145,7 @@ class MinimizeWindowButton extends WindowButton {
 
 class MaximizeWindowButton extends WindowButton {
   MaximizeWindowButton(
-      {super.key,
-      super.colors,
-      VoidCallback? onPressed,
-      bool? animate})
+      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
       : super(
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>
@@ -163,10 +155,7 @@ class MaximizeWindowButton extends WindowButton {
 
 class RestoreWindowButton extends WindowButton {
   RestoreWindowButton(
-      {super.key,
-      super.colors,
-      VoidCallback? onPressed,
-      bool? animate})
+      {super.key, super.colors, VoidCallback? onPressed, bool? animate})
       : super(
             animate: animate ?? false,
             iconBuilder: (buttonContext) =>

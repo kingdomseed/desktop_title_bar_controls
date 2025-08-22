@@ -147,8 +147,7 @@ class MacOSWindow extends DesktopWindow {
         debugPrint("Can't set size - don't have a workingRect");
         return;
       }
-      rect =
-          getRectOnScreen(sizeToSet, _alignment!, screenInfo.workingRect!);
+      rect = getRectOnScreen(sizeToSet, _alignment!, screenInfo.workingRect!);
     }
   }
 
@@ -265,7 +264,7 @@ class MacOSWindow extends DesktopWindow {
     if (!isValidHandle(handle, "maximizeOrRestore")) return;
     maximizeOrRestoreWindow(handle!);
   }
-  
+
   @override
   set topmost(bool topmost) {
     // TODO: implement topmost
