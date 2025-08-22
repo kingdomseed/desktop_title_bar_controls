@@ -142,7 +142,6 @@ static void bitsdojo_window_plugin_init(FlBitsdojoWindowPlugin* self) {
     self->cached_window = nullptr;
     self->realize_handler = 0;
     self->destroy_handler = 0;
-    // publish plugin after constructed; registrar set in new()
 }
 
 FlBitsdojoWindowPlugin* bitsdojo_window_plugin_new(FlPluginRegistrar* registrar) {
@@ -151,8 +150,6 @@ FlBitsdojoWindowPlugin* bitsdojo_window_plugin_new(FlPluginRegistrar* registrar)
 
 
   self->registrar = FL_PLUGIN_REGISTRAR(g_object_ref(registrar));
-  // Mark plugin as ready for external loads.
-  g_plugin.store(self, std::memory_order_release);
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   self->channel =
@@ -170,7 +167,12 @@ void bitsdojo_window_plugin_register_with_registrar(FlPluginRegistrar* registrar
   if (view) {
     GtkWidget* widget = GTK_WIDGET(view);
     if (gtk_widget_get_realized(widget)) {
-      plugin->cached_window = GTK_WINDOW(gtk_widget_get_toplevel(widget));
+      GtkWidget* toplevel = gtk_widget_get_toplevel(widget);
+      if (GTK_IS_WINDOW(toplevel)) {
+        plugin->cached_window = GTK_WINDOW(toplevel);
+      } else {
+        plugin->cached_window = nullptr;
+      }
       if (plugin->cached_window) {
         plugin->destroy_handler = g_signal_connect(
             GTK_WIDGET(plugin->cached_window), "destroy",
@@ -186,7 +188,12 @@ void bitsdojo_window_plugin_register_with_registrar(FlPluginRegistrar* registrar
           widget, "realize",
           G_CALLBACK(+[](GtkWidget* w, gpointer user_data) {
             auto* pl = static_cast<FlBitsdojoWindowPlugin*>(user_data);
-            pl->cached_window = GTK_WINDOW(gtk_widget_get_toplevel(w));
+            GtkWidget* toplevel = gtk_widget_get_toplevel(w);
+            if (GTK_IS_WINDOW(toplevel)) {
+              pl->cached_window = GTK_WINDOW(toplevel);
+            } else {
+              pl->cached_window = nullptr;
+            }
             if (pl->cached_window) {
               pl->destroy_handler = g_signal_connect(
                   GTK_WIDGET(pl->cached_window), "destroy",
@@ -200,6 +207,9 @@ void bitsdojo_window_plugin_register_with_registrar(FlPluginRegistrar* registrar
           }),
           plugin);
     }
+    // Publish the plugin globally only after it's fully initialized and
+    // signal handlers are connected.
+    g_plugin.store(plugin, std::memory_order_release);
     enhanceFlutterView(GTK_WIDGET(view));
   }
   g_object_unref(plugin);
