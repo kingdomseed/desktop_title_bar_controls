@@ -267,6 +267,7 @@ class MacOSWindow extends DesktopWindow {
 
   @override
   set topmost(bool topmost) {
-    // TODO: implement topmost
+    if (!isValidHandle(handle, "topmost")) return;
+    setTopmost(handle!, topmost ? 1 : 0);
   }
 }

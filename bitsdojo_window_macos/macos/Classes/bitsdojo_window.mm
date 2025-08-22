@@ -189,3 +189,11 @@ void setWindowTitle(NSWindow* window, const char* title) {
 double getTitleBarHeight(NSWindow* window) {
     return controller.titleBarHeight;
 }
+
+void setTopmost(NSWindow* window, int topmost) {
+    runOnMainThread(^{
+        // NSFloatingWindowLevel keeps the window above normal ones.
+        // Revert to NSNormalWindowLevel when disabling.
+        [window setLevel: (topmost == 1) ? NSFloatingWindowLevel : NSNormalWindowLevel];
+    });
+}

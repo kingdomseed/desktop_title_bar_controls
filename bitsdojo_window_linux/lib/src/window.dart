@@ -12,7 +12,7 @@ var isInsideDoWhenWindowReady = false;
 
 bool isValidHandle(int? handle, String operation) {
   if (handle == null || handle == 0) {
-    debugPrint("Could not $operation - handle is ${handle == null ? 'null' : '0'}");
+    debugPrint("Could not $operation - handle is null");
     return false;
   }
   return true;
@@ -199,6 +199,12 @@ class GtkWindow extends DesktopWindow {
     }
     native.setMaxSize(
         handle!, _maxSize!.width.toInt(), _maxSize!.height.toInt());
+  }
+
+  @override
+  set topmost(bool topmost) {
+    if (!isValidHandle(handle, "set topmost")) return;
+    native.setTopmost(handle!, topmost ? 1 : 0);
   }
 
   @override

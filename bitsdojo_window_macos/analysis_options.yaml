@@ -1,0 +1,11 @@
+# Apply Flutter's recommended lints
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # You can customize rules here. Keeping defaults for now.
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
