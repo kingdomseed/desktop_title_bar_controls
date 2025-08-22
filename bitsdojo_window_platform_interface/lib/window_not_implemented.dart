@@ -48,7 +48,7 @@ class NotImplementedWindow extends DesktopWindow {
   }
 
   @override
-  set topmost(bool toomost) {
+  set topmost(bool topmost) {
     throw UnimplementedError('topmost setter has not been implemented.');
   }
 
