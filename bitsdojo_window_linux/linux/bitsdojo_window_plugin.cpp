@@ -92,7 +92,7 @@ GtkWindow* getAppWindowHandle(){
     return win;
 }
 
-extern "C" int isAppWindowReady() {
+int isAppWindowReady() {
     FlBitsdojoWindowPlugin* p = g_plugin.load(std::memory_order_acquire);
     if (!p) return 0;
     return get_window(p) != nullptr ? 1 : 0;
