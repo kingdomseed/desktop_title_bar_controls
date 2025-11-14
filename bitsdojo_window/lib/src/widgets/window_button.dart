@@ -66,7 +66,7 @@ class WindowButton extends StatelessWidget {
       {super.key,
       WindowButtonColors? colors,
       this.builder,
-      @required this.iconBuilder,
+      required this.iconBuilder,
       this.padding,
       this.onPressed,
       this.animate = false}) {
